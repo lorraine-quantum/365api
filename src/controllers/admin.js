@@ -10,15 +10,15 @@ const getUsers = async (req, res) => {
     // res.set('Access-Control-Expose-Headers','Content-Range')
     // res.set('X-Total-Count',10)
     // res.set('Content-Range',10)
-    const allUser = await User.find({}).sort({createdAt:-1});
+    const allUser = await User.find({}).sort({ createdAt: -1 });
     if (allUser.length < 1) {
       throw new NotFound("No user");
     }
     // console.log(res.Access-Control-Expose-Headers)
-    
+
     res
       .status(StatusCodes.OK)
-      .json( allUser);
+      .json(allUser);
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
     console.log(error.message);
@@ -27,8 +27,8 @@ const getUsers = async (req, res) => {
 
 const adminGetSingleUser = async (req, res) => {
   try {
-    if(!req.params.id){
-        throw new BadRequest("req.params cannot be empty")
+    if (!req.params.id) {
+      throw new BadRequest("req.params cannot be empty")
     }
     const userId = req.params.id
     const singleUser = await User.findOne({
@@ -41,42 +41,42 @@ const adminGetSingleUser = async (req, res) => {
     }
     res.status(StatusCodes.OK).json(singleUser);
   } catch (error) {
-    res.status(StatusCodes.BAD_REQUEST).json({message:error.message});
+    res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
 };
 
 const adminEditSingleUser = async (req, res) => {
-try{
+  try {
 
-  const userId = req.params.id
-  const singleUser = await User.findOne({
+    const userId = req.params.id
+    const singleUser = await User.findOne({
       id: userId
     })
-    if(!req.params.id){
-        throw new BadRequest("req.params cannot be empty")
+    if (!req.params.id) {
+      throw new BadRequest("req.params cannot be empty")
     }
-     if (!singleUser) {
+    if (!singleUser) {
       throw new NotFound(
         `no user with id ${userId}`
-        );
-      }
-      // const user = await User.findOneAndUpdate({
-        //   _id:singleTransaction.owner.id,
-        // })
-        
-        const finalUserEdit = await User.findOneAndUpdate({id: userId},{tradeProfit:req.body.tradeProfit,referralBonus:req.body.referralBonus,totalEquity:req.body.totalEquity})
-        res.status(StatusCodes.OK).json(finalUserEdit);
-      }
-   catch (error) {
+      );
+    }
+    // const user = await User.findOneAndUpdate({
+    //   _id:singleTransaction.owner.id,
+    // })
+
+    const finalUserEdit = await User.findOneAndUpdate({ id: userId }, { tradeProfit: req.body.tradeProfit, tradeProgress: req.body.tradeProgress, verified: req.body.verified })
+    res.status(StatusCodes.OK).json(finalUserEdit);
+  }
+  catch (error) {
     console.log(error.message)
-    res.status(StatusCodes.BAD_REQUEST).json({message:error.message});
+    res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
 }
-;
+  ;
 const adminDeleteSingleTransaction = async (req, res) => {
   try {
-    if(!req.params.id){
-        throw new BadRequest("req.params cannot be empty")
+    if (!req.params.id) {
+      throw new BadRequest("req.params cannot be empty")
     }
     const transactionId = req.params.id
     const singleTransaction = await Transaction.findOneAndRemove({
@@ -89,10 +89,10 @@ const adminDeleteSingleTransaction = async (req, res) => {
     }
     res.status(StatusCodes.OK).json(singleTransaction);
   } catch (error) {
-    res.status(StatusCodes.BAD_REQUEST).json({message:error.message});
+    res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
   }
 };
 
 
 
-module.exports={getUsers, adminGetSingleUser,adminEditSingleUser}
+module.exports = { getUsers, adminGetSingleUser, adminEditSingleUser }
