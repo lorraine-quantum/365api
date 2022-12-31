@@ -5,7 +5,7 @@ module.exports = {
       description: 'Local server',
     },
     {
-      url: 'https://crypto-tech-api.onrender.com',
+      url: 'https://three-sixty-five-crypto.onrender.com',
       description: 'production server',
     },
   ],
