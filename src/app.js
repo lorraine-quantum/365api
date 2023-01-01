@@ -33,9 +33,9 @@ const adminAuthMiddleware = require("./middleware/admin-auth");
 
 //routes
 const transactionRoutes = require('./routes/transactionR')
+const withdrawalRoutes = require('./routes/withdrawalR')
 const authRoutes = require("./routes/authRoute");
 const adminAuth = require("./routes/adminAuth");
-const contractsRoutes = require("./routes/contractRoute");
 const uploadRoutes = require("./routes/uploadIdR")
 const modifyUserRoutes = require('./routes/modifyUserR')
 const adminRoutes = require('./routes/adminRoute')
@@ -64,6 +64,7 @@ app.get("/test-upload-ruby", (req, res) => {
 // routes
 app.use("/auth", authRoutes);
 app.use("/transaction", auth, transactionRoutes);
+app.use("/withdrawal", auth, withdrawalRoutes);
 app.use("/upload", uploadRoutes);
 app.use("/auth", auth, modifyUserRoutes);
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(docs));
@@ -100,7 +101,7 @@ const admin = new AdminJS({
 })
 const start = async () => {
   try {
-    await connectDB(cloud);
+    await connectDB(local);
     admin.watch()
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)

@@ -198,6 +198,70 @@ module.exports = {
         },
       },
     },
+    '/withdrawal/add': {
+      post: {
+        security: [{
+          bearerAuth: []
+        }],
+        tags: ['Withdrawal'],
+        description: 'Store User withdrawal',
+        operationId: 'AddWithdrawal',
+        parameters: [],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Transaction',
+              },
+            },
+          },
+        },
+
+        responses: {
+          0: {
+            description: '*',
+          },
+        },
+      },
+    },
+    '/withdrawal/all': {
+      get: {
+        security: [{
+          bearerAuth: []
+        }],
+        tags: ['Withdrawal'],
+        description: 'GET all User withdrawal',
+        operationId: 'getWithdrawal',
+        parameters: [],
+        responses: {
+          0: {
+            description: '*',
+          },
+        },
+      },
+    },
+    '/Withdrawal/single/{id}': {
+      get: {
+        security: [{
+          bearerAuth: []
+        }],
+        tags: ['Withdrawal'],
+        description: 'GET single withdrawal. NOTE: id is the transaction id (_id) gotten at the instance of creating a withdrawal',
+        operationId: 'getSingeWithdrawal',
+        parameters: [{
+          in: 'path',
+          name: "id",
+          type: "string",
+          required: "true",
+          description: "id of a withdrawal"
+        }],
+        responses: {
+          0: {
+            description: '*',
+          },
+        },
+      },
+    },
 
   },
 };
