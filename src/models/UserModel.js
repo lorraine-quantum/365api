@@ -14,6 +14,10 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  notification: {
+    type: String,
+    default: ''
+  },
   email: {
     type: String,
     required: [true, "email cannot be empty"],
@@ -44,6 +48,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "point-believe-twenty-open-rail-pool"
   },
+
   tradeProfit: {
     type: Number,
     default: 0,

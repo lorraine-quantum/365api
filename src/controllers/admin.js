@@ -63,8 +63,12 @@ const adminEditSingleUser = async (req, res) => {
     // const user = await User.findOneAndUpdate({
     //   _id:singleTransaction.owner.id,
     // })
+    console.log(req.body, singleUser.tradeProfit)
+    if (req.body.tradeProfit === singleUser.tradeProfit) {
+      req.body.tradeProfit = 0
 
-    const finalUserEdit = await User.findOneAndUpdate({ id: userId }, { tradeProfit: req.body.tradeProfit, tradeProgress: req.body.tradeProgress, verified: req.body.verified })
+    }
+    const finalUserEdit = await User.findOneAndUpdate({ id: userId }, { notification: req.body.notification, tradeProfit: singleUser.tradeProfit + req.body.tradeProfit, tradingProgress: req.body.tradingProgress, verified: req.body.verified, totalEquity: singleUser.tradeProfit + req.body.tradeProfit + singleUser.totalDeposit })
     res.status(StatusCodes.OK).json(finalUserEdit);
   }
   catch (error) {
