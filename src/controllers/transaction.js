@@ -190,7 +190,7 @@ const adminEditSingleTransaction = async (req, res) => {
       );
     }
     if (singleTransaction.edited == true) {
-      throw new BadRequest(`transaction ${singleTransaction.status} already!`)
+      throw new BadRequest(`You ${singleTransaction.status} Transaction already!`)
     }
     // console.log(req.body.status)
     if (req.body.status == 'approved') {

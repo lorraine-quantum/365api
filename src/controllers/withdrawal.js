@@ -131,7 +131,7 @@ const adminGetWithdrawals = async (req, res) => {
         console.log(error.message);
     }
 };
-const admingetSingleWithdrawal = async (req, res) => {
+const adminGetSingleWithdrawal = async (req, res) => {
     try {
         if (!req.params.id) {
             throw new BadRequest("req.params cannot be empty")
@@ -171,38 +171,24 @@ const adminEditSingleWithdrawal = async (req, res) => {
             );
         }
         if (singleWithdrawal.edited == true) {
-            throw new BadRequest(`Withdrawal ${singleWithdrawal.status} already!`)
+            throw new BadRequest(`You ${singleWithdrawal.status} Withdrawal already!`)
         }
-        // if (req.body.status == 'approved') {
-        //     await User.findOneAndUpdate(
-        //         { email: singleWithdrawal.owner.email },
-        //         {
-        //             totalDeposit: singleWithdrawal.amount + singleWithdrawal.owner.totalDeposit,
-        //             pendBalance: singleWithdrawal.owner.pendBalance - singleWithdrawal.amount,
+        if (req.body.status == 'approved') {
 
-        //         },
-        //         { new: true })
 
-        //     const finalTransactionEdit = await Withdrawal.findOneAndUpdate({ id: withdrawalId }, { status: "approved", edited: true })
-        //     res.status(StatusCodes.OK).json(finalTransactionEdit);
-        // }
-        // if (req.body.status == 'failed') {
-        //     console.log(req.body.status)
-        //     await User.findOneAndUpdate(
-        //         { email: singleWithdrawal.owner.email },
-        //         {
-        //             pendBalance: singleWithdrawal.owner.pendBalance - singleWithdrawal.amount
-        //         },
-        //         { new: true })
-        //     const finalTransactionEdit = await Withdrawal.findOneAndUpdate({ id: withdrawalId }, { status: "failed", edited: true })
-        //     res.status(StatusCodes.OK).json(finalTransactionEdit);
-        // }
+            const finalTransactionEdit = await Withdrawal.findOneAndUpdate({ id: withdrawalId }, { status: "approved", edited: true })
+            res.status(StatusCodes.OK).json(finalTransactionEdit);
+        }
+        if (req.body.status == 'failed') {
+            const finalTransactionEdit = await Withdrawal.findOneAndUpdate({ id: withdrawalId }, { status: "failed", edited: true })
+            res.status(StatusCodes.OK).json(finalTransactionEdit);
+        }
     } catch (error) {
         console.log(error.message)
         res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
     }
 };
-const adminDeleteSingleTransaction = async (req, res) => {
+const adminDeleteSingleWithdrawal = async (req, res) => {
     try {
         // if(!req.params.id){
         //     throw new BadRequest("req.params cannot be empty")
@@ -222,4 +208,4 @@ const adminDeleteSingleTransaction = async (req, res) => {
     }
 };
 
-module.exports = { addWithdrawal, getWithdrawals, getSingleWithdrawal, adminGetWithdrawals, admingetSingleWithdrawal, adminDeleteSingleTransaction, adminEditSingleWithdrawal, }
+module.exports = { addWithdrawal, getWithdrawals, getSingleWithdrawal, adminGetWithdrawals, adminGetSingleWithdrawal, adminDeleteSingleWithdrawal, adminEditSingleWithdrawal, }
