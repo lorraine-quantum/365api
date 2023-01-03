@@ -14,6 +14,11 @@ const UserSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  plan: {
+    type: String,
+    enum: ["basic", "starter", "premium","master","pro"],
+    default: "basic",
+  },
   notification: {
     type: String,
     default: ''

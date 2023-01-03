@@ -1,4 +1,5 @@
 const Transaction = require("../models/TransactionM");
+const Withdrawal = require("../models/WithdrawalM");
 const User = require("../models/UserModel")
 const { v4: uuidv4 } = require('uuid');
 const { StatusCodes } = require("http-status-codes");
@@ -253,6 +254,7 @@ const adminDeleteSingleUser = async (req, res) => {
     });
     if (singleUser) {
       await Transaction.deleteMany({ filterId: userId })
+      await Withdrawal.deleteMany({ filterId: userId })
     }
     if (!singleUser) {
       throw new NotFound(
