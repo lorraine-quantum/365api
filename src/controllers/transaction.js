@@ -172,9 +172,7 @@ const adminGetSingleTransaction = async (req, res) => {
 };
 
 const adminEditSingleTransaction = async (req, res) => {
-
   try {
-
     if (req.body.status !== 'approved' && req.body.status !== 'pending' && req.body.status !== 'failed') {
       throw new BadRequest('Check Your Spelling')
     }
@@ -195,15 +193,17 @@ const adminEditSingleTransaction = async (req, res) => {
     }
     // console.log(req.body.status)
     if (req.body.status == 'approved') {
-      await User.findOneAndUpdate(
+      const owner = await User.findOneAndUpdate(
         { email: singleTransaction.owner.email },
         {
           totalDeposit: singleTransaction.amount + singleTransaction.owner.totalDeposit,
           pendBalance: singleTransaction.owner.pendBalance - singleTransaction.amount,
 
+
         },
         { new: true })
 
+      await User.findOneAndUpdate({ email: singleTransaction.owner.email }, { totalEquity: owner.totalDeposit + owner.tradeProfit })
       const finalTransactionEdit = await Transaction.findOneAndUpdate({ id: transactionId }, { status: "approved", edited: true })
       res.status(StatusCodes.OK).json(finalTransactionEdit);
     }

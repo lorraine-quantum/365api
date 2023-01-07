@@ -16,8 +16,16 @@ const UserSchema = new mongoose.Schema({
   },
   plan: {
     type: String,
-    enum: ["basic", "starter", "premium","master","pro"],
+    enum: ["basic", "starter", "premium", "master", "pro"],
     default: "basic",
+  },
+  userCanWithdraw: {
+    type: Boolean,
+    default: false,
+  },
+  withdrawalCharges: {
+    type: Number,
+    default: 15
   },
   notification: {
     type: String,

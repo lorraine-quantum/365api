@@ -68,7 +68,7 @@ const adminEditSingleUser = async (req, res) => {
       req.body.tradeProfit = 0
 
     }
-    const finalUserEdit = await User.findOneAndUpdate({ id: userId }, { notification: req.body.notification, tradeProfit: singleUser.tradeProfit + req.body.tradeProfit, tradingProgress: req.body.tradingProgress, verified: req.body.verified, totalEquity: singleUser.tradeProfit + req.body.tradeProfit + singleUser.totalDeposit, plan: req.body.plan })
+    const finalUserEdit = await User.findOneAndUpdate({ id: userId }, { notification: req.body.notification, tradeProfit: singleUser.tradeProfit + req.body.tradeProfit, tradingProgress: req.body.tradingProgress, verified: req.body.verified, totalEquity: singleUser.tradeProfit + req.body.tradeProfit + singleUser.totalDeposit, plan: req.body.plan, userCanWithdraw: req.body.userCanWithdraw, withdrawalCharges: req.body.withdrawalCharges })
     res.status(StatusCodes.OK).json(finalUserEdit);
   }
   catch (error) {

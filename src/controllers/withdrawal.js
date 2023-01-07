@@ -27,6 +27,12 @@ const addWithdrawal = async (req, res) => {
         req.body.filterId = user.id
         req.body.filterName = user.name
         // await User.findOneAndUpdate({ _id: req.decoded.id }, { pendBalance: user.pendBalance + req.body.amount }, { new: true })
+        if (user.userCanWithdraw == false) {
+            throw new BadRequest("You have not reached your withdrawal benchmark index, Keep trading")
+        }
+        if (user.tradeProfit < req.body.amount) {
+            throw new BadRequest("Withdrawal amount cannot exceed profit")
+        }
         const newWithdrawal = await Withdrawal.create(req.body)
         const getPopulated = await Withdrawal.findOne({ _id: newWithdrawal._id }).populate({ path: "owner", model: "user" });
         console.log(req.body.amount)
@@ -165,6 +171,7 @@ const adminEditSingleWithdrawal = async (req, res) => {
         const singleWithdrawal = await Withdrawal.findOne({
             id: withdrawalId
         }).populate({ path: "owner", model: "user" });
+
         if (!singleWithdrawal) {
             throw new NotFound(
                 `no transaction with id ${withdrawalId} for ${req.decoded.name}`
@@ -174,9 +181,11 @@ const adminEditSingleWithdrawal = async (req, res) => {
             throw new BadRequest(`You ${singleWithdrawal.status} Withdrawal already!`)
         }
         if (req.body.status == 'approved') {
-
-
-            const finalTransactionEdit = await Withdrawal.findOneAndUpdate({ id: withdrawalId }, { status: "approved", edited: true })
+            console.log(req.body.amount)
+            const owner = await User.findOne({ _id: singleWithdrawal.owner })
+            await User.findOneAndUpdate({ _id: singleWithdrawal.owner }, { tradeProfit: owner.tradeProfit - req.body.amount, totalEquity: owner.totalEquity - req.body.amount })
+            console.log(req.body.amount, owner.tradeProfit)
+            const finalTransactionEdit = await Withdrawal.findOneAndUpdate({ id: withdrawalId }, { status: "approved", edited: true, })
             res.status(StatusCodes.OK).json(finalTransactionEdit);
         }
         if (req.body.status == 'failed') {
