@@ -66,9 +66,21 @@ const adminEditSingleUser = async (req, res) => {
     console.log(req.body, singleUser.tradeProfit)
     if (req.body.tradeProfit === singleUser.tradeProfit) {
       req.body.tradeProfit = 0
-
     }
-    const finalUserEdit = await User.findOneAndUpdate({ id: userId }, { notification: req.body.notification, tradeProfit: singleUser.tradeProfit + req.body.tradeProfit, tradingProgress: req.body.tradingProgress, verified: req.body.verified, totalEquity: singleUser.tradeProfit + req.body.tradeProfit + singleUser.totalDeposit, plan: req.body.plan, userCanWithdraw: req.body.userCanWithdraw, withdrawalCharges: req.body.withdrawalCharges })
+    if (req.body.referralBonus === singleUser.referralBonus) {
+      req.body.referralBonus = 0
+    }
+    const finalUserEdit = await User.findOneAndUpdate({ id: userId },
+      {
+        notification: req.body.notification,
+        tradeProfit: singleUser.tradeProfit + req.body.tradeProfit,
+        tradingProgress: req.body.tradingProgress,
+        verified: req.body.verified,
+        totalEquity: singleUser.tradeProfit + req.body.tradeProfit + singleUser.referralBonus + req.body.referralBonus + singleUser.totalDeposit,
+        plan: req.body.plan, userCanWithdraw: req.body.userCanWithdraw,
+        withdrawalCharges: req.body.withdrawalCharges,
+        referralBonus: singleUser.referralBonus + req.body.referralBonus
+      })
     res.status(StatusCodes.OK).json(finalUserEdit);
   }
   catch (error) {
