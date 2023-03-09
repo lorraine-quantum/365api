@@ -15,7 +15,7 @@ const addTransaction = async (req, res) => {
     let day = new Date().getDate()
     let month = new Date().getMonth()
     let year = new Date().getFullYear()
-    const date = `${day}-${month}-${year}`
+    const date = `${day}-${month + 1}-${year}`
     req.body.owner = req.decoded.id;
     req.body.date = date;
     req.body.id = uuidv4();

@@ -12,7 +12,7 @@ const addWithdrawal = async (req, res) => {
         console.log(req.decoded)
         uniqueId++
         let day = new Date().getDate()
-        let month = new Date().getMonth()
+        let month = new Date().getMonth() + 1
         let year = new Date().getFullYear()
         const date = `${day}-${month}-${year}`
         req.body.owner = req.decoded.id;
