@@ -12,7 +12,7 @@ const docs = require('./docs');
 const ejs = require('ejs')
 app.set('view engine', 'ejs')
 app.use(express.static('./public'))
-const mongoose = require('mongoose')
+const mongoose = require('mongoose') 
 //ADMIN
 const AdminJS = require('adminjs')
 const AdminJSExpress = require('@adminjs/express')

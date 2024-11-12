@@ -1,6 +1,5 @@
 
 let seedArray=["read","ring","dome","yellow","realize","country","paint","mask","baby","cot","reality","throw","give","sun","hop","append","duke","wood","moon","data","hurry","train","tasteful", "tranquil","repeat","lacking","stamp","bolt","paddle"]
-console.log(seedArray.length)
 
 
 function shuffle(array){

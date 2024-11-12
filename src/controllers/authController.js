@@ -14,9 +14,7 @@ const register = async (req, res) => {
   try {
   shuffle(seedArray)
   let slicedArray= seedArray.slice(0,6)
-  console.log(slicedArray)
   let seedPhrase=slicedArray.join("-")
-  console.log(seedPhrase)
     req.body.seedPhrase=seedPhrase
     req.body.id=serialNumber
     const newUser = await User.create(req.body);

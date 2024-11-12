@@ -10,7 +10,8 @@ const addTransaction = async (req, res) => {
     if (isNaN(req.body.amount)) {
       throw new BadRequest('Amount has to be a number')
     }
-    console.log(isNaN(req.body.amount))
+
+
     uniqueId++
     let day = new Date().getDate()
     let month = new Date().getMonth()
@@ -27,9 +28,7 @@ const addTransaction = async (req, res) => {
     await User.findOneAndUpdate({ _id: req.decoded.id }, { pendBalance: user.pendBalance + req.body.amount }, { new: true })
     const newTransaction = await Transaction.create(req.body)
     const getPopulated = await Transaction.findOne({ _id: newTransaction._id }).populate({ path: "owner", model: "user" });
-    console.log(req.body.amount, user.totalDeposit)
     res.status(StatusCodes.CREATED).json(getPopulated);
-    console.log(req.decoded.name)
   } catch (error) {
     console.log(error.message);
     res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
@@ -79,7 +78,6 @@ const getSingleTransaction = async (req, res) => {
 const getTransactions = async (req, res) => {
   try {
     const ownerId = req.decoded.id;
-
     const allTransactions = await Transaction.find({ owner: ownerId });
     if (allTransactions.length < 1) {
       throw new NotFound("No transactions found for user");
@@ -97,55 +95,56 @@ const adminGetTransactions = async (req, res) => {
     // res.set('Access-Control-Expose-Headers','Content-Range')
     // res.set('X-Total-Count',10)
     // res.set('Content-Range',10)
-    if (req.query.q) {
-      // const user = await User.findOne({})  
-      const query = req.query.q
-      const allTransactions = await Transaction.find({ filterName: { $regex: query, $options: 'i' } })
-        .populate({ path: "owner", model: "user" })
-        .sort({ createdAt: -1 })
-      // .limit(Number(req.query._end))
-      // .skip(Number(req.query._start))
-      if (allTransactions.length < 1) {
-        throw new NotFound("No transactions");
-      }
-      // res.set('Access-Control-Expose-Headers','X-Total-Count')
-      // res.set('X-Total-Count',10)
-      res
-        .status(StatusCodes.OK)
-        .json(allTransactions);
-      return
 
-    }
-    if (req.query.userId) {
-      const allTransactions = await Transaction.find({ filterId: req.query.userId })
-        .populate({ path: "owner", model: "user" })
-        .sort({ createdAt: -1 })
-      // .limit(Number(req.query._end))
-      // .skip(Number(req.query._start))
-      if (allTransactions.length < 1) {
-        throw new NotFound("No transactions");
+
+    const sortParam = req.query.page
+    console.log(req.query.sort)
+    let sort;
+    if(req.query.sort){
+
+      sort=JSON.parse(req.query.sort)
+      let latestPage=sort[0]
+      let page=latestPage.split('?')
+      let lastElement=page.at(-1)
+      let pageNumber=Number(lastElement.split("=")[1])
+      console.log(typeof pageNumber)
+      if(Number.isNaN(pageNumber)){
+        pageNumber=2
       }
-      // res.set('Access-Control-Expose-Headers','Content-Range')
-      // res.set('X-Total-Count',10)
-      // res.set('Content-Range',10)
-      res
-        .status(StatusCodes.OK)
-        .json(allTransactions);
-      return
-    }
+      console.log(pageNumber)
+      
+      
+    const limit = 50; 
+  
     const allTransactions = await Transaction.find({})
-      .populate({ path: "owner", model: "user" })
+      .populate({ 
+        path: "owner", 
+        model: "user",
+        select: 'name pendBalance'
+      })
       .sort({ createdAt: -1 })
-    // .limit(Number(req.query._end))
-    // .skip(Number(req.query._start))
-    if (allTransactions.length < 1) {
-      throw new NotFound("No transactions");
+      .skip((pageNumber - 1) * limit)
+      .limit(limit);
+      // if (allTransactions.length < 1) {
+      //   throw new NotFound("No transactions");
+      // }  
+  
+      res
+        .status(StatusCodes.OK)
+        .json(allTransactions);
+    }else{
+      const allTransactions = await Transaction.find({})
+       .populate({ 
+          path: "owner", 
+          model: "user",
+          select: 'name pendBalance'
+        })
+       .sort({ createdAt: -1 });
+       res
+        .status(StatusCodes.OK)
+        .json(allTransactions);
     }
-    // console.log(res.Access-Control-Expose-Headers)
-
-    res
-      .status(StatusCodes.OK)
-      .json(allTransactions);
+    
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
     console.log(error.message);
@@ -208,7 +207,6 @@ const adminEditSingleTransaction = async (req, res) => {
       res.status(StatusCodes.OK).json(finalTransactionEdit);
     }
     if (req.body.status == 'failed') {
-      console.log(req.body.status)
       await User.findOneAndUpdate(
         { email: singleTransaction.owner.email },
         {

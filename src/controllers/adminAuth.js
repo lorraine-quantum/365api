@@ -40,7 +40,6 @@ const login = async (req, res) => {
     if (!user) {
       throw new NotFound("Username not registered, Sign up");
     }
-console.log(user)
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       throw new Unauthenticated("Invalid credentials");

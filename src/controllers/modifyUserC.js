@@ -8,14 +8,12 @@ const {
   Unauthenticated,
 } = require("../errors/customErrors");
 const editUser = async (req, res) => {
-  console.log("inside editUse")
   try{
     if(req.body.password||req.body.email){
       return res.status(StatusCodes.BAD_REQUEST).json({
         message:"email and password are immutable"
       })
     }
-    console.log(req.body)
     const ownerId = req.decoded.id;
     const edited = await User.findOneAndUpdate(
       {
@@ -29,11 +27,9 @@ const editUser = async (req, res) => {
         `Token Expired`
       );
     }
-    console.log("edit success")
     return res.status(StatusCodes.CREATED).json({message:"Profile Updated"});
 }
 catch(error){
-  console.log("in edit error")
   return res.status(StatusCodes.BAD_REQUEST).json({message:error.message})
 }
 };

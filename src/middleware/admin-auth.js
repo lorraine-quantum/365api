@@ -14,7 +14,6 @@ const auth = async (req, res, next) => {
       throw new Unauthenticated("supply token and Bearer");
     }
     authorization = authorization.replace(/(^"|"$)/g, '')
-   console.log(authorization)
     const payload = jwt.verify(authorization, process.env.JWT_SECRET);
     req.decoded = { name: payload.name, id: payload.id };
     console.log('auth end, next')

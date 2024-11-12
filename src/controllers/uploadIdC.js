@@ -11,7 +11,6 @@ const storage = multer.diskStorage({
 
 const multerFilter = (req, file, cb) => {
   if (!file.mimetype.startsWith('image')) {
-      console.log(file.mimetype)
       req.fileValidationError='Please upload only images'
       return cb(('Please upload only images'), false);
 } else {
