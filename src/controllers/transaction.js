@@ -2,6 +2,7 @@ const Transaction = require("../models/TransactionM");
 const Withdrawal = require("../models/WithdrawalM");
 const User = require("../models/UserModel")
 const { v4: uuidv4 } = require('uuid');
+
 const { StatusCodes } = require("http-status-codes");
 const { BadRequest, NotFound } = require("../errors/customErrors");
 let uniqueId = 0
@@ -95,40 +96,20 @@ const adminGetTransactions = async (req, res) => {
     // res.set('Access-Control-Expose-Headers','Content-Range')
     // res.set('X-Total-Count',10)
     // res.set('Content-Range',10)
-
-
-    const sortParam = req.query.page
-    console.log(req.query.sort)
-    let sort;
-    if(req.query.sort){
-
-      sort=JSON.parse(req.query.sort)
-      let latestPage=sort[0]
-      let page=latestPage.split('?')
-      let lastElement=page.at(-1)
-      let pageNumber=Number(lastElement.split("=")[1])
-      console.log(typeof pageNumber)
-      if(Number.isNaN(pageNumber)){
-        pageNumber=2
-      }
-      console.log(pageNumber)
-      
-      
-    const limit = 50; 
-  
-    const allTransactions = await Transaction.find({})
+    
+    if(req.query.filter){
+      const pageNumber=JSON.parse(req.query.filter).myCustomQuery
+      const limit=50
+      console.log(`fetched page ${pageNumber}`)
+      const allTransactions = await Transaction.find({})
       .populate({ 
         path: "owner", 
         model: "user",
         select: 'name pendBalance'
-      })
+      }) 
       .sort({ createdAt: -1 })
       .skip((pageNumber - 1) * limit)
       .limit(limit);
-      // if (allTransactions.length < 1) {
-      //   throw new NotFound("No transactions");
-      // }  
-  
       res
         .status(StatusCodes.OK)
         .json(allTransactions);
